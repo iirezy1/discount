@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP STORE | الفواتير والعروض - كل عام وأنتم بخير</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tahoma', 'Segoe UI', system-ui;
+        }
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            color: #eee;
+            padding: 1.5rem 1rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .eid-banner {
+            background: linear-gradient(135deg, #2a5f3a, #1e3a2f);
+            border-radius: 60px;
+            padding: 1.2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 2px solid #ffd966;
+        }
+        .eid-banner h2 {
+            font-size: 1.8rem;
+            color: #ffd966;
+        }
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, #ffd966, #ffaa33);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .card {
+            background: rgba(20, 28, 44, 0.85);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 1.2rem;
+            border: 1px solid #2a3456;
+            transition: 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #f5b042;
+        }
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd966;
+        }
+        .price {
+            font-size: 1.7rem;
+            color: #ffd966;
+            margin: 0.5rem 0;
+        }
+        .gift {
+            background: #2a2f3f;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            display: inline-block;
+            font-size: 0.75rem;
+            color: #ffbe76;
+        }
+        button {
+            background: #f5b042;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 40px;
+            margin-top: 0.8rem;
+            cursor: pointer;
+        }
+        .order-form, .invoice-preview {
+            margin-top: 2rem;
+            background: #0f1422dd;
+            border-radius: 32px;
+            padding: 1.8rem;
+            backdrop-filter: blur(8px);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 60px;
+            border: none;
+            background: #1e253c;
+            color: white;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .invoice-box {
+            background: #1a1f30;
+            padding: 1.2rem;
+            border-radius: 24px;
+            border-right: 6px solid #f5b042;
+            margin-top: 1rem;
+        }
+        .invoice-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            border-bottom: 1px dashed #444;
+            padding: 0.3rem 0;
+        }
+        .total-price {
+            font-size: 1.4rem;
+            background: #00000055;
+            padding: 0.5rem;
+            border-radius: 40px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #6c7a9e;
+        }
+        .btn-invoice {
+            background: #2a9d8f;
+            margin-top: 1rem;
+        }
+        hr {
+            border-color: #2a3456;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="eid-banner">
+        <h2>🌙 كل عام وأنتم بخير 🌙</h2>
+        <p>بمناسبة عيد الاضحئ المبارك - أطيب التهاني مع أقوى العروض</p>
+        <p>⭐ عرض العيد: كل 5 رانكات = رانك مجاني ⭐</p>
+    </div>
+
+    <h1>🎮 VIP STORE</h1>
+    <div class="sub">أرخص الأسعار + فاتورة رسمية + هدايا مجانية</div>
+
+    <div class="products-grid" id="productsGrid">
+        <!-- سيتم ملء العروض بالجافاسكريبت لتجنب تكرار الكود -->
+    </div>
+
+    <!-- نموذج الطلب والفاتورة -->
+    <div class="order-form">
+        <h3>📝 بيانات الطلب</h3>
+        <div class="form-group">
+            <label>🎁 اختر المنتج من الأعلى أولاً</label>
+            <input type="text" id="productName" readonly placeholder="سيظهر هنا اسم المنتج">
+        </div>
+        <div class="form-group">
+            <label>🎮 معرف Xbox / اللاعب</label>
+            <input type="text" id="gamerTag" placeholder="أكتب معرفك">
+        </div>
+        <div class="form-group">
+            <label>🎁 هدية إضافية (اختياري - زيادة 1500 د.ع)</label>
+            <select id="extraGift">
+                <option value="لا شيء">بدون هدية</option>
+                <option value="اكسسوار نادر">اكسسوار نادر</option>
+                <option value="يوزر رباعي 8 آسيا">يوزر رباعي 8 آسيا</option>
+                <option value="200 كوينز">200 كوينز</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>📞 واتساب أو تيليجرام</label>
+            <input type="text" id="contact" placeholder="رقم واتساب أو المعرف">
+        </div>
+        <button class="btn-invoice" onclick="showInvoice()">🧾 معاينة الفاتورة وتأكيد الطلب</button>
+    </div>
+
+    <!-- منطقة عرض الفاتورة -->
+    <div class="invoice-preview" id="invoiceArea" style="display:none;">
+        <h3>📄 الفاتورة التفصيلية</h3>
+        <div id="invoiceContent" class="invoice-box"></div>
+        <button onclick="sendOrderWithInvoice()" style="background:#2a9d8f; margin-top:1rem;">✅ إرسال الطلب مع الفاتورة</button>
+        <button onclick="document.getElementById('invoiceArea').style.display='none'" style="background:#555; margin-top:0.5rem;">إلغاء</button>
+    </div>
+
+    <footer>🛡️ جميع العروض بسعر أرخص من السوق | هدايا حقيقية | فاتورة إلكترونية مع كل طلب</footer>
+</div>
+
+<script>
+    // قائمة العروض (الاسم، السعر، الهدية المجانية المرفقة بالعرض)
+    const offers = [
+        { name: "رانك أساسي (1690+990 كوينز)", price: 5000, gift: "بدون هدية إضافية" },
+        { name: "عرض المطور (رانكين + حزمتين + هدية)", price: 10000, gift: "اكسسوار أو يوزر رباعي" },
+        { name: "تغيير اسم + يوزر رباعي نادر", price: 7000, gift: "300 كوينز إضافية" },
+        { name: "اكسسوار نادر (مع خصم)", price: 3000, gift: "يوزر نادر مع حزمتين" },
+        { name: "تغيير اسم + يوزر رباعي + رانك", price: 13000, gift: "شامل كل شيء" },
+        { name: "5 حزم = السادسة مجاناً + هدية", price: 10000, gift: "حزمة 6 مجاناً + هدية" },
+        { name: "VIP 30 + رانك قولد 90 يوم + حزمتين", price: 50000, gift: "حزمتين مجاناً" },
+        { name: "Birthday Bundle + رانكين", price: 12000, gift: "هدية مفاجئة" },
+        { name: "10 حزم 990 كوينز + حزمتين مجاناً", price: 20000, gift: "حزمتين إضافيتين مجاناً" },
+        { name: "4 حزم 4280 كوينز + حزمتين 990 + اكسسوار", price: 40000, gift: "حزمتين 990 + اكسسوار" },
+        { name: "5 رانكات + السادس مجاناً", price: 18000, gift: "رانك مجاني" },
+        { name: "VIP 15 + يوزر رباعي كامل", price: 25000, gift: "يوزر رباعي نادر" },
+        { name: "VIP 15 + رانكين هدية", price: 23000, gift: "رانكين مجاناً" },
+        { name: "6 رانكات + السابع مجاناً", price: 18000, gift: "رانك مجاني" },
+        { name: "عرض العيد: 5 رانكات + رانك مجاني", price: 18000, gift: "رانك مجاني هدية العيد" }
+    ];
+
+    // عرض البطاقات
+    const grid = document.getElementById("productsGrid");
+    offers.forEach(offer => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="product-title">${offer.name}</div>
+            <div class="price">${offer.price.toLocaleString()} د.ع</div>
+            <div class="gift">🎁 ${offer.gift}</div>
+            <button onclick="selectProduct('${offer.name.replace(/'/g, "\\'")}', ${offer.price})">اختر هذا العرض</button>
+        `;
+        grid.appendChild(card);
+    });
+
+    let selectedProductText = "";
+    let selectedPrice = 0;
+
+    function selectProduct(product, price) {
+        selectedProductText = product;
+        selectedPrice = price;
+        document.getElementById("productName").value = product;
+        document.getElementById("invoiceArea").style.display = "none";
+    }
+
+    function getExtraGiftCost() {
+        return document.getElementById("extraGift").value !== "لا شيء" ? 1500 : 0;
+    }
+
+    function generateInvoiceNumber() {
+        return "INV-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+    }
+
+    function showInvoice() {
+        if (!selectedProductText) {
+            alert("❌ الرجاء اختيار منتج أولاً من العروض أعلاه");
+            return;
+        }
+        const gamerTag = document.getElementById("gamerTag").value.trim();
+        if (!gamerTag) {
+            alert("❌ الرجاء إدخال معرف Xbox");
+            return;
+        }
+
+        const extraGift = document.getElementById("extraGift").value;
+        const extraCost = getExtraGiftCost();
+        const total = selectedPrice + extraCost;
+        const invoiceNo = generateInvoiceNumber();
+        const date = new Date().toLocaleString("ar-EG");
+
+        let giftLine = "";
+        if (extraGift !== "لا شيء") giftLine = `<div class="invoice-row"><span>🎁 هدية إضافية:</span><span>${extraGift} (+1500 د.ع)</span></div>`;
+
+        const invoiceHTML = `
+            <div class="invoice-row"><strong>رقم الفاتورة:</strong> <span>${invoiceNo}</span></div>
+            <div class="invoice-row"><strong>التاريخ:</strong> <span>${date}</span></div>
+            <div class="invoice-row"><strong>المنتج:</strong> <span>${selectedProductText}</span></div>
+            <div class="invoice-row"><strong>السعر الأساسي:</strong> <span>${selectedPrice.toLocaleString()} د.ع</span></div>
+            ${giftLine}
+            <div class="invoice-row"><strong>الضريبة:</strong> <span>0 د.ع</span></div>
+            <hr>
+            <div class="invoice-row" style="font-size:1.3rem;"><strong>💰 الإجمالي النهائي:</strong> <strong>${total.toLocaleString()} د.ع</strong></div>
+            <div class="invoice-row"><strong>🎮 معرف Xbox:</strong> <span>${gamerTag}</span></div>
+            <div class="invoice-row"><strong>📞 التواصل:</strong> <span>${document.getElementById("contact").value || "غير مدخل"}</span></div>
+            <div class="invoice-row"><strong>⭐ حالة الطلب:</strong> <span>قيد المراجعة</span></div>
+        `;
+        document.getElementById("invoiceContent").innerHTML = invoiceHTML;
+        document.getElementById("invoiceArea").style.display = "block";
+        
+        // حفظ بيانات الفاتورة مؤقتاً للإرسال
+        window.currentInvoice = { invoiceNo, gamerTag, extraGift, extraCost, total, contact: document.getElementById("contact").value };
+    }
+
+    function sendOrderWithInvoice() {
+        if (!window.currentInvoice) return;
+        const inv = window.currentInvoice;
+        const giftOffer = offers.find(o => o.name === selectedProductText)?.gift || "هدية مجانية حسب العرض";
+        
+        let message = `🧾 *فاتورة جديدة - VIP STORE* 🧾%0A`;
+        message += `📄 رقم الفاتورة: ${inv.invoiceNo}%0A`;
+        message += `📅 التاريخ: ${new Date().toLocaleString("ar-EG")}%0A`;
+        message += `━━━━━━━━━━━━━━━%0A`;
+        message += `🎁 المنتج: ${selectedProductText}%0A`;
+        message += `🎁 هدية العرض: ${giftOffer}%0A`;
+        if (inv.extraGift !== "لا شيء") message += `🎁 هدية إضافية: ${inv.extraGift} (+1500 د.ع)%0A`;
+        message += `💰 السعر الأساسي: ${selectedPrice.toLocaleString()} د.ع%0A`;
+        message += `💸 الإجمالي النهائي: ${inv.total.toLocaleString()} د.ع%0A`;
+        message += `━━━━━━━━━━━━━━━%0A`;
+        message += `🎮 معرف Xbox: ${inv.gamerTag}%0A`;
+        message += `📞 للتواصل: ${inv.contact || "غير مدخل"}%0A`;
+        message += `⭐ كل عام وأنتم بخير بمناسبة العيد 🌙%0A`;
+        message += `⏳ سيتم التواصل معكم خلال دقائق لتأكيد الطلب.`;
+
+        let phoneNumber = "964XXXXXXXXX"; // غير الرقم إلى واتسابك
+        let url = `https://wa.me/${phoneNumber}?text=${message}`;
+        window.open(url, "_blank");
+        
+        // إعادة تعيين بعد الإرسال
+        document.getElementById("invoiceArea").style.display = "none";
+        window.currentInvoice = null;
+        alert("✅ تم إرسال الفاتورة عبر واتساب، سيتم الرد عليك قريباً");
+    }
+</script>
+</body>
+</html>
