@@ -2,329 +2,441 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP STORE | الفواتير والعروض - كل عام وأنتم بخير</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>VIP STORE | سلة بأيقونة</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Tahoma', 'Segoe UI', system-ui;
         }
+
         body {
-            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
-            color: #eee;
-            padding: 1.5rem 1rem;
+            background: #0a0f1e;
+            color: #eef;
+            font-family: 'Segoe UI', 'Tahoma', system-ui;
+            padding: 0 0 40px 0;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+
+        /* شريط علوي */
+        .top-bar {
+            background: #0d121fcc;
+            backdrop-filter: blur(12px);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #252e42;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .eid-banner {
-            background: linear-gradient(135deg, #2a5f3a, #1e3a2f);
-            border-radius: 60px;
-            padding: 1.2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            border: 2px solid #ffd966;
-        }
-        .eid-banner h2 {
-            font-size: 1.8rem;
-            color: #ffd966;
-        }
-        h1 {
-            font-size: 2.5rem;
-            text-align: center;
+        .logo h2 {
+            font-size: 1.4rem;
             background: linear-gradient(135deg, #ffd966, #ffaa33);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-        .sub {
-            text-align: center;
-            color: #aaa;
-            margin-bottom: 2rem;
-        }
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        .card {
-            background: rgba(20, 28, 44, 0.85);
-            backdrop-filter: blur(4px);
-            border-radius: 28px;
-            padding: 1.2rem;
-            border: 1px solid #2a3456;
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            background: #1e2538;
+            padding: 8px 16px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             transition: 0.2s;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: #f5b042;
+        .cart-icon:hover {
+            background: #2a3456;
         }
-        .product-title {
+        .cart-icon span {
             font-size: 1.3rem;
-            font-weight: bold;
-            color: #ffd966;
         }
-        .price {
-            font-size: 1.7rem;
-            color: #ffd966;
-            margin: 0.5rem 0;
-        }
-        .gift {
-            background: #2a2f3f;
-            padding: 0.3rem 0.8rem;
-            border-radius: 30px;
-            display: inline-block;
-            font-size: 0.75rem;
-            color: #ffbe76;
-        }
-        button {
+        .cart-count {
             background: #f5b042;
-            border: none;
-            width: 100%;
-            padding: 10px;
+            color: #0a0f1e;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
             font-weight: bold;
-            border-radius: 40px;
-            margin-top: 0.8rem;
+        }
+
+        /* نافذة السلة المنبثقة */
+        .cart-dropdown {
+            position: absolute;
+            left: 20px;
+            top: 70px;
+            background: #0f1424;
+            border-radius: 24px;
+            width: 340px;
+            max-width: calc(100vw - 40px);
+            padding: 16px;
+            border: 1px solid #2a3456;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 200;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+        .cart-dropdown h4 {
+            margin-bottom: 12px;
+            border-right: 3px solid #ffd966;
+            padding-right: 8px;
+        }
+        .cart-dropdown-items {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .cart-item-mini {
+            background: #0a0f18;
+            border-radius: 16px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+        }
+        .cart-item-mini .name {
+            font-weight: bold;
+            color: #ffd966;
+        }
+        .cart-item-mini .controls {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .cart-item-mini button {
+            background: #2a3456;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 30px;
+            color: white;
             cursor: pointer;
         }
-        .order-form, .invoice-preview {
-            margin-top: 2rem;
-            background: #0f1422dd;
-            border-radius: 32px;
-            padding: 1.8rem;
-            backdrop-filter: blur(8px);
+        .cart-item-mini .remove-mini {
+            background: #8b3a3a;
         }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 60px;
-            border: none;
+        .cart-item-mini input {
+            width: 50px;
+            text-align: center;
             background: #1e253c;
+            border: none;
+            padding: 4px;
+            border-radius: 30px;
             color: white;
         }
-        label {
-            display: block;
-            margin-bottom: 6px;
+        .cart-dropdown-total {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 12px 0;
+            border-top: 1px solid #2a3456;
+            padding-top: 8px;
+        }
+        .cart-dropdown button {
+            width: 100%;
+            background: #f5b042;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
             font-weight: bold;
+            margin-top: 6px;
+            cursor: pointer;
+        }
+        .clear-cart-btn {
+            background: #555 !important;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        .eid {
+            background: linear-gradient(135deg, #1e4a2f, #0f2e1e);
+            text-align: center;
+            padding: 14px;
+            border-radius: 48px;
+            margin-bottom: 24px;
+            border: 1px solid #ffd96688;
+        }
+        .eid h2 {
+            color: #ffd966;
+            font-size: 1.3rem;
+        }
+
+        .main-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .main-title h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #ffd966, #ffaa33);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+        .product-card {
+            background: #11161f;
+            border-radius: 24px;
+            padding: 14px;
+            border: 1px solid #252e42;
+            transition: 0.2s;
+        }
+        .product-card:hover {
+            border-color: #ffd966;
+        }
+        .product-name {
+            font-weight: bold;
+            color: #ffd966;
+            margin-bottom: 6px;
+        }
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 6px 0;
+        }
+        .product-gift {
+            background: #1e2538;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #ffbe76;
+            margin: 8px 0;
+        }
+        .add-btn {
+            background: #2a9d8f;
+            width: 100%;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+
+        .invoice-area {
+            margin-top: 30px;
+            background: #0d121f;
+            border-radius: 28px;
+            padding: 20px;
+            display: none;
         }
         .invoice-box {
-            background: #1a1f30;
-            padding: 1.2rem;
-            border-radius: 24px;
-            border-right: 6px solid #f5b042;
-            margin-top: 1rem;
+            background: #06090f;
+            padding: 16px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            direction: ltr;
+            text-align: left;
+            border-right: 4px solid #ffd966;
+            max-height: 350px;
+            overflow: auto;
         }
-        .invoice-row {
+        .invoice-buttons {
             display: flex;
-            justify-content: space-between;
-            margin: 0.5rem 0;
-            border-bottom: 1px dashed #444;
-            padding: 0.3rem 0;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
         }
-        .total-price {
-            font-size: 1.4rem;
-            background: #00000055;
-            padding: 0.5rem;
+        .invoice-buttons button {
+            flex: 1;
+            padding: 10px;
             border-radius: 40px;
-            text-align: center;
-            margin: 1rem 0;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
         }
+        .copy-btn { background: #4a6fa5; color: white; }
+        .whatsapp-btn { background: #25D366; color: white; }
+        .telegram-btn { background: #0088cc; color: white; }
+        .image-btn { background: #e67e22; color: white; }
+        .email-btn { background: #3b5998; color: white; }
         footer {
             text-align: center;
-            margin-top: 3rem;
+            margin-top: 40px;
             color: #6c7a9e;
-        }
-        .btn-invoice {
-            background: #2a9d8f;
-            margin-top: 1rem;
-        }
-        hr {
-            border-color: #2a3456;
-            margin: 1rem 0;
+            font-size: 0.75rem;
         }
     </style>
 </head>
 <body>
+<div class="top-bar">
+    <div class="logo"><h2>VIP STORE</h2></div>
+    <div class="cart-icon" id="cartIcon">
+        <span>🛒</span>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+</div>
+
+<!-- نافذة السلة -->
+<div class="cart-dropdown" id="cartDropdown">
+    <h4>🛍️ سلة التسوق</h4>
+    <div id="cartDropdownItems" class="cart-dropdown-items">السلة فارغة</div>
+    <div id="cartDropdownTotal" class="cart-dropdown-total">الإجمالي: 0 د.ع</div>
+    <button onclick="generateInvoiceFromCart()">🧾 عمل فاتورة</button>
+    <button class="clear-cart-btn" onclick="clearCartAndClose()">🗑️ تفريغ السلة</button>
+</div>
+
 <div class="container">
-    <div class="eid-banner">
+    <div class="eid">
         <h2>🌙 كل عام وأنتم بخير 🌙</h2>
-        <p>بمناسبة عيد الاضحئ المبارك - أطيب التهاني مع أقوى العروض</p>
-        <p>⭐ عرض العيد: كل 5 رانكات = رانك مجاني ⭐</p>
+        <p>عروض العيد .. أضف إلى السلة وأنشئ فاتورة فورية</p>
     </div>
-
-    <h1>🎮 VIP STORE</h1>
-    <div class="sub">أرخص الأسعار + فاتورة رسمية + هدايا مجانية</div>
-
-    <div class="products-grid" id="productsGrid">
-        <!-- سيتم ملء العروض بالجافاسكريبت لتجنب تكرار الكود -->
+    <div class="main-title">
+        <h1>أرخص الأسعار + هدايا مجانية</h1>
+        <p>اختر عرضك ➕ سلة في الأعلى</p>
     </div>
+    <div class="products-grid" id="productsGrid"></div>
 
-    <!-- نموذج الطلب والفاتورة -->
-    <div class="order-form">
-        <h3>📝 بيانات الطلب</h3>
-        <div class="form-group">
-            <label>🎁 اختر المنتج من الأعلى أولاً</label>
-            <input type="text" id="productName" readonly placeholder="سيظهر هنا اسم المنتج">
+    <div class="invoice-area" id="invoiceArea">
+        <h3>📄 فاتورة الطلب</h3>
+        <div class="invoice-box" id="invoiceText"></div>
+        <div class="invoice-buttons">
+            <button class="copy-btn" onclick="copyInvoice()">📋 نسخ</button>
+            <button class="whatsapp-btn" onclick="sendWhatsApp()">💬 واتساب</button>
+            <button class="telegram-btn" onclick="sendTelegram()">📨 تيليجرام</button>
+            <button class="image-btn" onclick="saveInvoiceAsImage()">🖼️ حفظ كصورة</button>
+            <button class="email-btn" onclick="sendEmail()">📧 إيميل</button>
+            <button onclick="closeInvoice()">❌ إغلاق</button>
         </div>
-        <div class="form-group">
-            <label>🎮 معرف Xbox / اللاعب</label>
-            <input type="text" id="gamerTag" placeholder="أكتب معرفك">
-        </div>
-        <div class="form-group">
-            <label>🎁 هدية إضافية (اختياري - زيادة 1500 د.ع)</label>
-            <select id="extraGift">
-                <option value="لا شيء">بدون هدية</option>
-                <option value="اكسسوار نادر">اكسسوار نادر</option>
-                <option value="يوزر رباعي 8 آسيا">يوزر رباعي 8 آسيا</option>
-                <option value="200 كوينز">200 كوينز</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>📞 واتساب أو تيليجرام</label>
-            <input type="text" id="contact" placeholder="رقم واتساب أو المعرف">
-        </div>
-        <button class="btn-invoice" onclick="showInvoice()">🧾 معاينة الفاتورة وتأكيد الطلب</button>
     </div>
-
-    <!-- منطقة عرض الفاتورة -->
-    <div class="invoice-preview" id="invoiceArea" style="display:none;">
-        <h3>📄 الفاتورة التفصيلية</h3>
-        <div id="invoiceContent" class="invoice-box"></div>
-        <button onclick="sendOrderWithInvoice()" style="background:#2a9d8f; margin-top:1rem;">✅ إرسال الطلب مع الفاتورة</button>
-        <button onclick="document.getElementById('invoiceArea').style.display='none'" style="background:#555; margin-top:0.5rem;">إلغاء</button>
-    </div>
-
-    <footer>🛡️ جميع العروض بسعر أرخص من السوق | هدايا حقيقية | فاتورة إلكترونية مع كل طلب</footer>
+    <footer>🔒 فاتورة رسمية | أرسلها لأي منصة | حفظ كصورة وإرسال بالبريد</footer>
 </div>
 
 <script>
-    // قائمة العروض (الاسم، السعر، الهدية المجانية المرفقة بالعرض)
-    const offers = [
-        { name: "رانك أساسي (1690+990 كوينز)", price: 5000, gift: "بدون هدية إضافية" },
-        { name: "عرض المطور (رانكين + حزمتين + هدية)", price: 10000, gift: "اكسسوار أو يوزر رباعي" },
-        { name: "تغيير اسم + يوزر رباعي نادر", price: 7000, gift: "300 كوينز إضافية" },
-        { name: "اكسسوار نادر (مع خصم)", price: 3000, gift: "يوزر نادر مع حزمتين" },
-        { name: "تغيير اسم + يوزر رباعي + رانك", price: 13000, gift: "شامل كل شيء" },
-        { name: "5 حزم = السادسة مجاناً + هدية", price: 10000, gift: "حزمة 6 مجاناً + هدية" },
-        { name: "VIP 30 + رانك قولد 90 يوم + حزمتين", price: 50000, gift: "حزمتين مجاناً" },
-        { name: "Birthday Bundle + رانكين", price: 12000, gift: "هدية مفاجئة" },
-        { name: "10 حزم 990 كوينز + حزمتين مجاناً", price: 20000, gift: "حزمتين إضافيتين مجاناً" },
-        { name: "4 حزم 4280 كوينز + حزمتين 990 + اكسسوار", price: 40000, gift: "حزمتين 990 + اكسسوار" },
-        { name: "5 رانكات + السادس مجاناً", price: 18000, gift: "رانك مجاني" },
-        { name: "VIP 15 + يوزر رباعي كامل", price: 25000, gift: "يوزر رباعي نادر" },
-        { name: "VIP 15 + رانكين هدية", price: 23000, gift: "رانكين مجاناً" },
-        { name: "6 رانكات + السابع مجاناً", price: 18000, gift: "رانك مجاني" },
-        { name: "عرض العيد: 5 رانكات + رانك مجاني", price: 18000, gift: "رانك مجاني هدية العيد" }
+    const productsList = [
+        { id: 1, name: "رانك أساسي (1690+990 كوينز)", price: 5000, gift: "بدون هدية" },
+        { id: 2, name: "عرض المطور (رانكين + حزمتين)", price: 10000, gift: "هدية اكسسوار أو يوزر رباعي" },
+        { id: 3, name: "تغيير اسم + يوزر رباعي", price: 7000, gift: "300 كوينز إضافية" },
+        { id: 4, name: "اكسسوار نادر", price: 3000, gift: "يوزر نادر مع حزمتين" },
+        { id: 5, name: "تغيير اسم + يوزر رباعي + رانك", price: 13000, gift: "شامل كل شيء" },
+        { id: 6, name: "5 حزم = السادسة مجاناً", price: 10000, gift: "حزمة 6 + هدية" },
+        { id: 7, name: "VIP 30 + رانك قولد 90 يوم", price: 50000, gift: "حزمتين قفت هدية " },
+        { id: 8, name: "Birthday Bundle + رانكين", price: 12000, gift: "هدية مفاجئة" },
+        { id: 9, name: "10 حزم 990 كوينز", price: 20000, gift: "حزمتين مجاناً" },
+        { id: 10, name: "4 حزم 4280 كوينز", price: 40000, gift: "حزمتين 990 + اكسسوار" },
+        { id: 11, name: "5 رانكات + السادس مجاناً", price: 18000, gift: "رانك مجاني" },
+        { id: 12, name: "VIP 15 + يوزر رباعي", price: 25000, gift: "يوزر رباعي نادر" },
+        { id: 13, name: "VIP 15 + رانكين هدية", price: 23000, gift: "رانكين مجاناً" },
+        { id: 14, name: "6 رانكات + السابع مجاناً", price: 18000, gift: "رانك مجاني" },
+        { id: 15, name: "عرض العيد (5 رانكات)", price: 18000, gift: "رانك مجاني هدية العيد" }
     ];
 
-    // عرض البطاقات
-    const grid = document.getElementById("productsGrid");
-    offers.forEach(offer => {
-        const card = document.createElement("div");
-        card.className = "card";
+    let cart = [];
+
+    const productsGrid = document.getElementById("productsGrid");
+    productsList.forEach(p => {
+        let card = document.createElement("div");
+        card.className = "product-card";
         card.innerHTML = `
-            <div class="product-title">${offer.name}</div>
-            <div class="price">${offer.price.toLocaleString()} د.ع</div>
-            <div class="gift">🎁 ${offer.gift}</div>
-            <button onclick="selectProduct('${offer.name.replace(/'/g, "\\'")}', ${offer.price})">اختر هذا العرض</button>
+            <div class="product-name">${p.name}</div>
+            <div class="product-price">${p.price.toLocaleString()} د.ع</div>
+            <div class="product-gift">🎁 ${p.gift}</div>
+            <button class="add-btn" onclick="addToCart(${p.id})">➕ أضف إلى السلة</button>
         `;
-        grid.appendChild(card);
+        productsGrid.appendChild(card);
     });
 
-    let selectedProductText = "";
-    let selectedPrice = 0;
-
-    function selectProduct(product, price) {
-        selectedProductText = product;
-        selectedPrice = price;
-        document.getElementById("productName").value = product;
-        document.getElementById("invoiceArea").style.display = "none";
+    function addToCart(id) {
+        let product = productsList.find(p => p.id === id);
+        let existing = cart.find(i => i.id === id);
+        if (existing) existing.quantity++;
+        else cart.push({ ...product, quantity: 1 });
+        updateCartUI();
+        showCartDropdownTemporarily();
     }
 
-    function getExtraGiftCost() {
-        return document.getElementById("extraGift").value !== "لا شيء" ? 1500 : 0;
+    function updateCartUI() {
+        let total = 0, count = 0;
+        let html = "";
+        cart.forEach((item, idx) => {
+            let itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            count += item.quantity;
+            html += `
+                <div class="cart-item-mini">
+                    <div class="name">${item.name}</div>
+                    <div>${item.price.toLocaleString()} د.ع × ${item.quantity}</div>
+                    <div class="controls">
+                        <button onclick="changeQty(${idx}, -1)">-</button>
+                        <input type="number" id="qty-${idx}" value="${item.quantity}" min="1" onchange="setQty(${idx}, this.value)">
+                        <button onclick="changeQty(${idx}, 1)">+</button>
+                        <button class="remove-mini" onclick="removeItem(${idx})">حذف</button>
+                    </div>
+                    <div>المجموع: ${itemTotal.toLocaleString()} د.ع</div>
+                </div>
+            `;
+        });
+        if (cart.length === 0) html = "<div>السلة فارغة 🛒</div>";
+        document.getElementById("cartDropdownItems").innerHTML = html;
+        document.getElementById("cartDropdownTotal").innerHTML = `💰 الإجمالي: ${total.toLocaleString()} د.ع`;
+        document.getElementById("cartCount").innerText = count;
     }
 
-    function generateInvoiceNumber() {
-        return "INV-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+    function changeQty(idx, delta) {
+        let newQty = cart[idx].quantity + delta;
+        if (newQty >= 1) cart[idx].quantity = newQty;
+        else cart.splice(idx, 1);
+        updateCartUI();
     }
+    function setQty(idx, val) { let qty = parseInt(val); if (isNaN(qty) || qty < 1) qty = 1; cart[idx].quantity = qty; updateCartUI(); }
+    function removeItem(idx) { cart.splice(idx, 1); updateCartUI(); }
+    function clearCartAndClose() { cart = []; updateCartUI(); document.getElementById("cartDropdown").style.display = "none"; }
 
-    function showInvoice() {
-        if (!selectedProductText) {
-            alert("❌ الرجاء اختيار منتج أولاً من العروض أعلاه");
-            return;
-        }
-        const gamerTag = document.getElementById("gamerTag").value.trim();
-        if (!gamerTag) {
-            alert("❌ الرجاء إدخال معرف Xbox");
-            return;
-        }
+    function showCartDropdownTemporarily() {
+        let dropdown = document.getElementById("cartDropdown");
+        dropdown.style.display = "block";
+        setTimeout(() => { if (!dropdown.matches(':hover')) dropdown.style.display = "none"; }, 3000);
+    }
+    document.getElementById("cartIcon").onclick = () => {
+        let d = document.getElementById("cartDropdown");
+        d.style.display = d.style.display === "block" ? "none" : "block";
+    };
+    document.addEventListener("click", function(e) {
+        if (!document.getElementById("cartIcon").contains(e.target) && !document.getElementById("cartDropdown").contains(e.target))
+            document.getElementById("cartDropdown").style.display = "none";
+    });
 
-        const extraGift = document.getElementById("extraGift").value;
-        const extraCost = getExtraGiftCost();
-        const total = selectedPrice + extraCost;
-        const invoiceNo = generateInvoiceNumber();
-        const date = new Date().toLocaleString("ar-EG");
-
-        let giftLine = "";
-        if (extraGift !== "لا شيء") giftLine = `<div class="invoice-row"><span>🎁 هدية إضافية:</span><span>${extraGift} (+1500 د.ع)</span></div>`;
-
-        const invoiceHTML = `
-            <div class="invoice-row"><strong>رقم الفاتورة:</strong> <span>${invoiceNo}</span></div>
-            <div class="invoice-row"><strong>التاريخ:</strong> <span>${date}</span></div>
-            <div class="invoice-row"><strong>المنتج:</strong> <span>${selectedProductText}</span></div>
-            <div class="invoice-row"><strong>السعر الأساسي:</strong> <span>${selectedPrice.toLocaleString()} د.ع</span></div>
-            ${giftLine}
-            <div class="invoice-row"><strong>الضريبة:</strong> <span>0 د.ع</span></div>
-            <hr>
-            <div class="invoice-row" style="font-size:1.3rem;"><strong>💰 الإجمالي النهائي:</strong> <strong>${total.toLocaleString()} د.ع</strong></div>
-            <div class="invoice-row"><strong>🎮 معرف Xbox:</strong> <span>${gamerTag}</span></div>
-            <div class="invoice-row"><strong>📞 التواصل:</strong> <span>${document.getElementById("contact").value || "غير مدخل"}</span></div>
-            <div class="invoice-row"><strong>⭐ حالة الطلب:</strong> <span>قيد المراجعة</span></div>
-        `;
-        document.getElementById("invoiceContent").innerHTML = invoiceHTML;
+    function generateInvoiceFromCart() {
+        if (cart.length === 0) { alert("⚠️ السلة فارغة!"); return; }
+        let invoiceNum = "INV-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+        let date = new Date().toLocaleString("ar-EG");
+        let total = 0, itemsText = "";
+        cart.forEach(item => {
+            let itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            itemsText += `• ${item.name} × ${item.quantity} = ${itemTotal.toLocaleString()} د.ع\n   🎁 ${item.gift}\n`;
+        });
+        let invoice = `╔════════════════════════════════════════╗\n║            VIP STORE - فاتورة            ║\n╠════════════════════════════════════════╣\n📄 رقم الفاتورة: ${invoiceNum}\n📅 التاريخ: ${date}\n────────────────────────────────────────\n🛍️ المنتجات:\n${itemsText}\n────────────────────────────────────────\n💰 الإجمالي النهائي: ${total.toLocaleString()} د.ع\n────────────────────────────────────────\n⭐ كل عام وأنتم بخير 🌙\n╚════════════════════════════════════════╝`;
+        document.getElementById("invoiceText").innerText = invoice;
         document.getElementById("invoiceArea").style.display = "block";
-        
-        // حفظ بيانات الفاتورة مؤقتاً للإرسال
-        window.currentInvoice = { invoiceNo, gamerTag, extraGift, extraCost, total, contact: document.getElementById("contact").value };
+        window.lastInvoice = invoice;
+        window.lastInvoiceNum = invoiceNum;
     }
-
-    function sendOrderWithInvoice() {
-        if (!window.currentInvoice) return;
-        const inv = window.currentInvoice;
-        const giftOffer = offers.find(o => o.name === selectedProductText)?.gift || "هدية مجانية حسب العرض";
-        
-        let message = `🧾 *فاتورة جديدة - VIP STORE* 🧾%0A`;
-        message += `📄 رقم الفاتورة: ${inv.invoiceNo}%0A`;
-        message += `📅 التاريخ: ${new Date().toLocaleString("ar-EG")}%0A`;
-        message += `━━━━━━━━━━━━━━━%0A`;
-        message += `🎁 المنتج: ${selectedProductText}%0A`;
-        message += `🎁 هدية العرض: ${giftOffer}%0A`;
-        if (inv.extraGift !== "لا شيء") message += `🎁 هدية إضافية: ${inv.extraGift} (+1500 د.ع)%0A`;
-        message += `💰 السعر الأساسي: ${selectedPrice.toLocaleString()} د.ع%0A`;
-        message += `💸 الإجمالي النهائي: ${inv.total.toLocaleString()} د.ع%0A`;
-        message += `━━━━━━━━━━━━━━━%0A`;
-        message += `🎮 معرف Xbox: ${inv.gamerTag}%0A`;
-        message += `📞 للتواصل: ${inv.contact || "غير مدخل"}%0A`;
-        message += `⭐ كل عام وأنتم بخير بمناسبة العيد 🌙%0A`;
-        message += `⏳ سيتم التواصل معكم خلال دقائق لتأكيد الطلب.`;
-
-        let phoneNumber = "964XXXXXXXXX"; // غير الرقم إلى واتسابك
-        let url = `https://wa.me/${phoneNumber}?text=${message}`;
-        window.open(url, "_blank");
-        
-        // إعادة تعيين بعد الإرسال
-        document.getElementById("invoiceArea").style.display = "none";
-        window.currentInvoice = null;
-        alert("✅ تم إرسال الفاتورة عبر واتساب، سيتم الرد عليك قريباً");
-    }
+    function closeInvoice() { document.getElementById("invoiceArea").style.display = "none"; }
+    function copyInvoice() { if (!window.lastInvoice) { alert("أنشئ فاتورة أولاً"); return; } navigator.clipboard.writeText(window.lastInvoice); alert("✅ تم النسخ"); }
+    function sendWhatsApp() { if (!window.lastInvoice) return; let phone = prompt("رقم واتساب:", "7700000000"); if(phone) window.open(`https://wa.me/${phone}?text=${encodeURIComponent(window.lastInvoice)}`); }
+    function sendTelegram() { copyInvoice(); alert("افتح تيليجرام وألصق"); window.open("https://t.me/"); }
+    async function saveInvoiceAsImage() { let el = document.getElementById("invoiceText"); if(!el.innerText.trim()) return; let canvas = await html2canvas(el, { scale: 2, backgroundColor: "#06090f" }); let link = document.createElement("a"); link.download = `فاتورة_${Date.now()}.png`; link.href = canvas.toDataURL(); link.click(); alert("✅ تم حفظ الصورة"); }
+    function sendEmail() { if(!window.lastInvoice) return; let email = prompt("البريد الإلكتروني:"); if(email) window.location.href = `mailto:${email}?subject=فاتورة ${window.lastInvoiceNum}&body=${encodeURIComponent(window.lastInvoice)}`; alert("📧 تم فتح البريد"); }
 </script>
 </body>
 </html>
